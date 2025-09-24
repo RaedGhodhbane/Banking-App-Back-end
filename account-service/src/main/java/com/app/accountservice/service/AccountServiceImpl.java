@@ -1,4 +1,5 @@
 package com.app.accountservice.service;
+import com.app.accountservice.clients.CustomerRestClient;
 import com.app.accountservice.dtos.AccountDTO;
 import com.app.accountservice.entities.Account;
 import com.app.accountservice.mapper.AccountMapper;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final CustomerServiceClient customerServiceClient;
+    private final CustomerRestClient customerRestClient;
     private final AccountMapper accountMapper;
 
 
@@ -39,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
         AccountDTO dto = accountMapper.toDTO(savedAccount);
 
         try {
-            Customer customer = customerServiceClient.getCustomerById(savedAccount.getCustomerId());
+            Customer customer = customerRestClient.getCustomerById(savedAccount.getCustomerId());
             dto.setCustomer(customer);
         } catch (Exception e) {
             log.warn("Impossible de récupérer le customer avec id {}: {}", savedAccount.getCustomerId(), e.getMessage());
@@ -56,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
 
         return accounts.stream().map(account -> {
             AccountDTO dto = accountMapper.toDTO(account);
-            dto.setCustomer(customerServiceClient.getCustomerById(account.getCustomerId()));
+            dto.setCustomer(customerRestClient.getCustomerById(account.getCustomerId()));
             return dto;
         }).toList();
     }
@@ -66,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
         AccountDTO dto = accountMapper.toDTO(account);
-        dto.setCustomer(customerServiceClient.getCustomerById(account.getCustomerId()));
+        dto.setCustomer(customerRestClient.getCustomerById(account.getCustomerId()));
 
         return dto;
     }
@@ -84,7 +85,7 @@ public class AccountServiceImpl implements AccountService {
         Account updatedAccount = accountRepository.save(account);
 
         AccountDTO dto = accountMapper.toDTO(updatedAccount);
-        dto.setCustomer(customerServiceClient.getCustomerById(updatedAccount.getCustomerId()));
+        dto.setCustomer(customerRestClient.getCustomerById(updatedAccount.getCustomerId()));
 
         return dto;
     }
@@ -107,7 +108,7 @@ public class AccountServiceImpl implements AccountService {
         Account updatedAccount = accountRepository.save(account);
 
         AccountDTO dto = accountMapper.toDTO(updatedAccount);
-        dto.setCustomer(customerServiceClient.getCustomerById(updatedAccount.getCustomerId()));
+        dto.setCustomer(customerRestClient.getCustomerById(updatedAccount.getCustomerId()));
 
         return dto;
     }
@@ -126,7 +127,7 @@ public class AccountServiceImpl implements AccountService {
         Account updatedAccount = accountRepository.save(account);
 
         AccountDTO dto = accountMapper.toDTO(updatedAccount);
-        dto.setCustomer(customerServiceClient.getCustomerById(updatedAccount.getCustomerId()));
+        dto.setCustomer(customerRestClient.getCustomerById(updatedAccount.getCustomerId()));
 
         return dto;
     }
